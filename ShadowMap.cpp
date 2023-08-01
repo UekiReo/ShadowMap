@@ -40,8 +40,8 @@ MeshData mesh_data;
 
 glm::mat4 V_cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 glm::mat4 P_cam = glm::perspective(60.0f, 1.0f, 0.1f, 10.0f);
-//glm::mat4 V_light = glm::lookAt(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-//glm::mat4 P_light = glm::perspective(50.0f, 1.0f, 0.1f, 10.0f);
+glm::mat4 V_light = glm::lookAt(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+glm::mat4 P_light = glm::perspective(50.0f, 1.0f, 0.1f, 10.0f);
 
 glm::mat4 M_fish;
 glm::mat4 M_quad = glm::translate(glm::vec3(0.0f, -0.6f, 0.0f)) * glm::rotate(-45.0f, glm::vec3(0.0f, 0.0f, 0.0f)) * glm::scale(glm::vec3(0.75f));
@@ -81,15 +81,15 @@ void draw_pass_1()
     }
 
     const int P_loc = glGetUniformLocation(shader_program, "P");
-    //if (P_loc != -1)
-    //{
-    //    glUniformMatrix4fv(P_loc, 1, false, glm::value_ptr(P_light));
-    //}
+    if (P_loc != -1)
+    {
+        glUniformMatrix4fv(P_loc, 1, false, glm::value_ptr(P_light));
+    }
 
     glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(50.0, 30.0);
 
-    //draw_scene(V_light);
+    draw_scene(V_light);
     glDisable(GL_POLYGON_OFFSET_FILL);
 }
 
@@ -134,11 +134,11 @@ void draw_pass_2()
 
     const int Shadow_loc = glGetUniformLocation(shader_program, "Shadow");
     const glm::mat4 S = glm::translate(glm::vec3(0.5f)) * glm::scale(glm::vec3(0.5f));
-    //if (Shadow_loc != -1)
-    //{
-    //    const glm::mat4 Shadow = S * P_light * V_light * glm::inverse(V_cam);
-    //    glUniformMatrix4fv(Shadow_loc, 1, false, glm::value_ptr(Shadow));
-    //}
+    if (Shadow_loc != -1)
+    {
+        const glm::mat4 Shadow = S * P_light * V_light * glm::inverse(V_cam);
+        glUniformMatrix4fv(Shadow_loc, 1, false, glm::value_ptr(Shadow));
+    }
 
     draw_scene(V_cam);
 }
